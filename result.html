@@ -1,0 +1,246 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="/custom/js/mustache.min.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript">
+    var singers = {
+      "饕餮乐队": "https://www.zgzg.io/wp-content/uploads/Taotie.png",
+      "張以真": "https://www.zgzg.io/wp-content/uploads/Michelle-Chang.png",
+      "徐卉琪": "https://www.zgzg.io/wp-content/uploads/Huiqi-Xu.png",
+      "Team AFK": "https://www.zgzg.io/wp-content/uploads/afk.png",
+      "牛童": "https://www.zgzg.io/wp-content/uploads/Niu-tong.png",
+      "林嘉纯": "https://www.zgzg.io/wp-content/uploads/Jane-Lin.png",
+      "Shane Huang": "https://www.zgzg.io/wp-content/uploads/Shane.png",
+      "Terry Fu": "https://www.zgzg.io/wp-content/uploads/Terry-1.png",
+      "洪迪": "https://www.zgzg.io/wp-content/uploads/Hong-di.png",
+      "金晶": "https://www.zgzg.io/wp-content/uploads/Jin-Jing.png",
+    }
+  </script>
+  <style>
+    html {
+      width: 100%;
+      height: 100%;
+      --count: 5;
+      --top: linear-gradient(#9164cc, #6124ac);
+      --bottom: linear-gradient(#99D2F1, #F5A3C2);
+    }
+
+    body {
+      background-color: black;
+      background-size: cover;
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      color: white;
+    }
+
+    #header {
+      margin-top: 5vh;
+      margin-left: 5%;
+      height: 20%;
+    }
+
+    #header img {
+      height: 50%
+    }
+
+    .round {
+      position: sticky;
+      font-size: 3vh;
+    }
+
+    .round:hover {
+      background: blue;
+      cursor: pointer;
+    }
+
+    #container {
+      height: 65%;
+      width: 90%;
+      margin: auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+
+    .singer {
+      width: 20%;
+    }
+
+    .vote {
+      color: white;
+      text-align: center;
+      width: 100%;
+      border-bottom: white solid 3px;
+      vertical-align: text-bottom;
+      font-size: 3vh;
+    }
+
+    .bar {
+      width: 80%;
+      margin: auto;
+      transition-property: height;
+      transition-duration: 0.3s;
+      font-size: 0;
+    }
+
+    .bar_top {
+      background: var(--top);
+      height: 40%;
+    }
+
+    .bar_bottom {
+      background-image: var(--bottom);
+      height: 40%;
+    }
+
+
+    .profile {
+      text-align: center;
+      height: 20%;
+      font-size: 3vh;
+    }
+
+    .profile .pic {
+      display: block;
+      margin: 1vh auto 1vh auto;
+      height: calc(100% - 3vh)
+    }
+
+    .legend.audience {
+      background-image: var(--bottom);
+    }
+
+    .legend.judge {
+      background: var(--top);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">
+    <img style="margin:auto;display:block" src="https://www.zgzg.io/wp-content/uploads/2019/06/zgzg-logo.png" />
+    <div>
+      <div id="select_round">
+        <div data-round="1a" class="round">第一轮A组 观众投票统计</div>
+        <div data-round="1b" class="round" style="display:none">第一轮B组 观众投票统计</div>
+        <div data-round="2" class="round" style="display:none">第二轮
+          <span class="legend audience">观众</span>+
+          <span class="legend judge">评委</span>
+          加权投票统计</div>
+        <div data-round="1b" class="round" style="display:none">季军
+          加权投票统计<span class="legend audience">观众</span>+
+          <span class="legend judge">评委</span>
+        </div>
+        <div data-round="1b" class="round" style="display:none">亚军
+          加权投票统计<span class="legend audience">观众</span>+
+          <span class="legend judge">评委</span>
+        </div>
+        <div data-round="1b" class="round" style="display:none">冠军
+          加权投票统计<span class="legend audience">观众</span>+
+          <span class="legend judge">评委</span>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+  <div id="container">
+    <template id="template">
+      <div class="singer">
+        <div tabindex=1 class="vote">
+          <div class="count" contenteditable="true"></div>
+          <div class="bar bar_top edit" contenteditable="true">10</div>
+          <div class="bar bar_bottom edit" contenteditable="true">10</div>
+        </div>
+        <div class="profile">
+          <img class="pic" src="{{{profile_pic}}}">
+          <div class="name">{{profile_name}}</div>
+          </select>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <script type="text/javascript">
+    var count = 5;
+    for (key in singers) {
+      data = {
+        "profile_name": key,
+        "profile_pic": singers[key],
+      }
+      template = $("#template").html();
+      html = Mustache.render(template, data)
+      $("#container").append(html);
+    }
+
+    $(".vote").each(function() {
+      Add($(this));
+    });
+    $(".profile").dblclick(function() {
+      $(this).parent().remove();
+    });
+    Normalize();
+    var round_expanded = false;
+    $(".round").on("click", function() {
+      if (round_expanded) {
+        $(".round").hide();
+        $(this).show();
+        if ($(this).data('round') == "2") {
+          // $(".bar_top").text("10");
+          // $(".bar_bottom").text("10");
+          // Normalize();
+        } else {
+          // $(".bar_top").text("0");
+          // $(".bar_bottom").text("10");
+          // Normalize();
+        }
+        round_expanded = false;
+      } else {
+        $(".round").show();
+        round_expanded = true;
+      }
+    });
+
+
+    $(".bar").on("focusin", function() {
+      console.log('ok');
+      $(".bar").css("font-size", "1em");
+    });
+
+    $(".bar").on("focusout", function() {
+      Add($(this).parent());
+      Normalize();
+      $(".bar").css("font-size", "0em");
+    });
+
+
+    function Add(vote) {
+      console.log(vote);
+      top_count = parseInt(vote.children(".bar_top").text() || 0);
+      bottom_count = parseInt(vote.children(".bar_bottom").text() || 0);
+      vote.children(".count").text(top_count + bottom_count);
+      console.log(top_count);
+    }
+
+    function Normalize() {
+      highest = 0;
+      $(".count").each(function() {
+        v = parseInt(this.innerText);
+        if (v > highest) highest = v;
+      });
+      if (highest == 0) highest = 1;
+      $(".bar_bottom").each(function() {
+        this.style.height = Math.max(this.innerText / highest * 75, 0) + "%";
+      });
+      $(".bar_top").each(function() {
+        this.style.height = Math.max(this.innerText / highest * 75, 0) + "%";
+      });
+    }
+  </script>
+</body>
+
+</html>

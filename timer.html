@@ -1,0 +1,43 @@
+<html>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<style>
+    html {
+        height: 100%;
+    }
+
+    div {
+        font-size: 20vmin;
+        text-align: center;
+        margin: auto;
+
+    }
+
+    #time {
+        margin-top: 25vh;
+    }
+
+    #start {
+        padding: 2vh;
+        border: 1px solid;
+        border-radius: 1vh;
+        display: inline-block;
+        margin: auto;
+    }
+</style>
+<div>
+    <div id="time"><span contenteditable=true id="seconds">90</span><span>s</span></div>
+    <div id="start">start</div>
+</div>
+<script type="text/javascript">
+    function CountDown() {
+        if (parseInt($("#seconds").text()) > 0) {
+            $("#seconds").text(parseInt($("#seconds").text() - 1));
+            setTimeout(CountDown, 1000);
+        }
+    }
+    $("#start").click(function() {
+        $("#start").hide("fast", CountDown);
+    });
+</script>
+
+</html>

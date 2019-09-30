@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        html {
+            height: 100%;
+            background: black;
+            color: white;
+        }
+
+        body {
+            background-size: 100%;
+        }
+
+        #ok {
+            font-size: 5vw;
+            text-align: center;
+            margin: auto;
+            background-color: black;
+            opacity: 0.5;
+        }
+
+        .names {
+            font-size: 20vh;
+            border: none;
+        }
+
+        #start {
+            padding: 0;
+            border: 1px solid;
+            border-radius: 1vh;
+            display: inline-block;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div class="click" style="height:5vh"></div>
+        <div id="ok">
+            <div id="1" class="ranking" style="color:#F5A3C2">季军：<span contenteditable=true class="names">1</span></div>
+            <div id="2" style="color:#99D2F1" class="ranking">亚军：<span contenteditable=true class="names">1</span></div>
+            <div id="3" style="color:yellow" class="ranking">冠军：<span contenteditable=true class="names">1</span></div>
+        </div>
+        <div class="click" style="width:100%;height:55vh;color:black">1</div>
+    </div>
+    <script type="text/javascript">
+        var singers = {
+            "饕餮乐队": "https://www.zgzg.io/wp-content/uploads/Taotie.png",
+            "張以真": "https://www.zgzg.io/wp-content/uploads/Michelle-Chang.png",
+            "徐卉琪": "https://www.zgzg.io/wp-content/uploads/Huiqi-Xu.png",
+            "Team AFK": "https://www.zgzg.io/wp-content/uploads/afk.png",
+            "牛童": "https://www.zgzg.io/wp-content/uploads/Niu-tong.png",
+            "林嘉纯": "https://www.zgzg.io/wp-content/uploads/Jane-Lin.png",
+            "Shane Huang": "https://www.zgzg.io/wp-content/uploads/Shane.png",
+            "Terry Fu": "https://www.zgzg.io/wp-content/uploads/Terry-1.png",
+            "洪迪": "https://www.zgzg.io/wp-content/uploads/Hong-di.png",
+            "金晶": "https://www.zgzg.io/wp-content/uploads/Jin-Jing.png",
+        };
+        var counter = 0;
+        $(".click").on("click", function() {
+            $(".ranking").hide();
+            counter++;
+            if (counter == 4) counter = 1;
+            $("#" + counter).show();
+            pic = $("#" + counter + " span").text();
+            console.log(pic);
+            $('body').css('background-image', "url(" + singers[pic] + ")");
+        });
+
+        $(".names").on("focusout", function() {
+            console.log(this.innerText);
+
+
+        });
+        $(".names").autocomplete({
+            minLength: 0,
+            source: Object.keys(singers),
+        });
+    </script>
+
+</body>
+
+</html>
